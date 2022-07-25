@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"time"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -36,7 +37,10 @@ func main() {
 	fmt.Printf("There are %d ingress in the cluster\n", len(ingress.Items))
 
 	for _, ing := range ingress.Items {
-		fmt.Printf("%s\n", ing.Name)
+		//Print NAME CLASS HOSTS ADDRESS PORTS AGE
+		fmt.Printf("Creation age %v \n", time.Now().Sub(ing.CreationTimestamp.Time).Minutes())
+		fmt.Printf("Class Name %s \n", ing.Annotations["kubernetes.io/ingress.class"])
+		fmt.Printf(" Name Host IP Port %s %s %d %d \n", ing.Name, ing.Spec.Rules[0].Host, ing.Spec.Rules[0].HTTP.Paths[0].Backend.Service.Port.Number, ing.Spec.Rules[0].HTTP.Paths[0].Backend.Service.Port.Number)
 	}
 
 }
